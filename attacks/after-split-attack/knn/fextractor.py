@@ -13,16 +13,16 @@ import glob
 def extract(times, sizes, features):
 
     #Transmission size features
-    features.append(len(sizes))
+    features.append(len(sizes))               #流量包数    特征1
 
     count = 0
     for x in sizes:
         if x > 0:
             count += 1
-    features.append(count)
-    features.append(len(times)-count)
+    features.append(count)                #出流量包数 特征2
+    features.append(len(times)-count)     #入流量包数 特征3
 
-    features.append(times[-1] - times[0])
+    features.append(times[-1] - times[0])    #一个文件内所有流量包传递时间 特征3
 
     #Unique packet lengths
 ##    for i in range(-1500, 1501):
@@ -32,7 +32,7 @@ def extract(times, sizes, features):
 ##            features.append(0)
 
     #Transpositions (similar to good distance scheme)
-    count = 0
+    count = 0               # 4 根据出流量数据包的索引位置构建特征，但在达到500个特征之后停止，不够500则补X
     for i in range(0, len(sizes)):
         if sizes[i] > 0:
             count += 1
@@ -42,7 +42,7 @@ def extract(times, sizes, features):
     for i in range(count, 500):
         features.append("X")
         
-    count = 0
+    count = 0    # 5 此出数据包与上一个出数据包的距离作为特征，生成500个特征，不够500补X
     prevloc = 0
     for i in range(0, len(sizes)):
         if sizes[i] > 0:
@@ -62,12 +62,13 @@ def extract(times, sizes, features):
             if sizes[i] > 0:
                 count += 1
         else:
-            features.append(count)
+            features.append(count)         # 6 每30个数据流量包统计出流量的数，作为一个特征。共100个特征
             count = 0
     for i in range(len(sizes)/30, 100):
         features.append(0)
 
-    #Bursts
+    #Bursts                     # 7 当有连续的入流量数据包时即为一次突发，统计距离上一次出现突发时，出流量数据包的数量
+                                #压入bursts列表，将列表中的最大值，平均值，列表长度作为特征；若列表长为0，则将将X作为特征
     bursts = []
     curburst = 0
     consnegs = 0
@@ -112,20 +113,20 @@ def extract(times, sizes, features):
     features.append(counts[2])
     features.append(counts[3])
     features.append(counts[4])
-    features.append(counts[5])
-    for i in range(0, 100):
+    features.append(counts[5])    # 8 统计出现突发时，出流量的种类：出流量数大于2、大于5、大于10、15、20、50 情况的次数
+    for i in range(0, 100):    # 9 将突发的前100个值作为特征添加到 features 列表中。如果突发不足100个，则将剩余的位置用 "X" 填充
         try:
             features.append(bursts[i])
         except:
             features.append("X")
 
-    for i in range(0, 10):
+    for i in range(0, 10):   # 10 将数据包大小列表 sizes 的前10个值加上1500作为特征添加到 features 列表中。如果 sizes 列表不足10个值，则将剩余的位置用 "X" 填充。
         try:
             features.append(sizes[i] + 1500)
         except:
             features.append("X")
 
-    itimes = [0]*(len(sizes)-1)
+    itimes = [0]*(len(sizes)-1)   # 11 计算了数据包时间间隔列表 itimes 中每个时间间隔的平均值和标准差作为特征
     for i in range(1, len(sizes)):
         itimes[i-1] = times[i] - times[i-1]
     if len(itimes) > 0:
@@ -203,7 +204,7 @@ for fname in flist:
     f.close()
 
     #Extract features. All features are non-negative numbers or X. 
-    features = []
+    features = []    # 12 对提取的特征进行字符串化处理，如果特征是 'X'，则替换为 -1
     try: 
         extract(times, sizes, features)
         writestr = ""
