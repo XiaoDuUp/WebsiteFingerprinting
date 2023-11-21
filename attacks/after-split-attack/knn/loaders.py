@@ -158,6 +158,7 @@ def kfold(data, fi, foldtotal):
 
 def load_list(flist, time=0):
     #loads the list of files in flist
+    #data 包含所有加载的数据，datanames 包含与数据对应的文件名。
     data = []
     opendata = []
     datanames = []
@@ -211,6 +212,8 @@ def load_listn(flist):
     
 
 def load_options(fname):
+    #从给定文件中解析配置选项，将其存储为字典，并返回这个字典
+    #key值为列表中索引为0的元素，值为处理后的列表中索引为1的元素。
     d_options = {}
     f = open(fname, "r")
     lines = f.readlines()
@@ -235,6 +238,7 @@ def load_options(fname):
     return d_options
 
 def write_options(fname, d_options):
+    #这个函数的目的是将提供的字典 d_options 中的配置选项按照指定的顺序写入到指定的文件 fname 中
     other = d_options.keys()
     order = ["CLOSED_SITENUM", "CLOSED_INSTNUM", "OPEN_INSTNUM", "OPEN",
              "INPUT_LOC", "OUTPUT_LOC", "DATA_LOC", "ATTACK_LOC", "DATA_TYPE",
