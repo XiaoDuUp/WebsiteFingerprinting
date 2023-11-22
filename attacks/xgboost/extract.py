@@ -30,11 +30,11 @@ def config_logger(args):
 
 
 
-def extract(features, x, times, directions):
-    st = x - 50    
-    gaps = []
+def extract(features, x, times, directions):   # x 为从列表的第50到列表的倒数第50之间    x对应一个值调用一次extract函数
+    st = x - 50       # x前移50
+    gaps = [] 
     for j in range(0, 99):
-        gaps.append(times[st + j + 1] - times[st + j])
+        gaps.append(times[st + j + 1] - times[st + j])   # gaps 列表存储了相邻时间戳之间的差值
     features.append(float(np.mean(gaps)))
     features.append(float(np.std(gaps)))
     features.append(gaps[48])
@@ -44,7 +44,7 @@ def extract(features, x, times, directions):
     features.append(gaps[52])
     features.append(max(gaps))
 
-    nextinc = 10
+    nextinc = 10                                 #通过循环查找一个特定的索引（在当前位置 x 之后的一定范围内）来获取下一个特定条件（directions[x+j] < 0）的位置，其中 j 在范围（1 到 20）内。找到这个位置后，计算这两个位置之间的时间差并将其附加到 features 列表中
     for j in range(1, 20):
         if (directions[x+j] < 0):
             nextinc = j
@@ -53,12 +53,12 @@ def extract(features, x, times, directions):
     features.append(times[x] - times[0])
 
     #packet rate should be lowest around a gap
-    for j in range(1, 10):
+    for j in range(1, 10):         #计算 x 周围的一些时间戳之间的时间差并将其附加到 features 列表中。在循环中，以 j 为步长，获取一些时间戳并计算它们与当前位置 x 之间的时间差
         features.append(times[x+j*2] - times[x-j*2])
 
     #number of outgoing packets should be highest around a gap
 
-    count = 0
+    count = 0            #对于当前位置 x 周围的时间戳，统计方向为正（大于零）的数量，并将其附加到 features 列表中。这里分别使用不同范围内的时间戳来计算出站数据包的数量。
     for j in range(0, 11):
         if (directions[x+j] > 0):
             count += 1
@@ -109,9 +109,9 @@ def get_truesplit(times, directions):
     cnt = 2
     for i in range(1, len(directions)):
         direction = int(directions[i])
-        if abs(direction) > 800:
+        if abs(direction) > 800:   #  当检测到 directions 中的值在绝对值上大于 800 时，会跳过这些值的检查
             continue 
-        if  direction == cnt:
+        if  direction == cnt:     #当检测到 directions 中的值符合预期的递增顺序（例如，方向值从 1 开始递增），会将这些位置添加到 truesplits 列表中，并递增 cnt 值。
             truesplits.append(i)
             cnt += 1
         # if (abs(int(directions[i])) < 888 and (   abs(int(directions[i])) != abs(int(directions[i-1])))    ):
@@ -162,7 +162,7 @@ def parallel(flist,testfolder, n_jobs = 20):
     pool.map(work, zip(flist,[testfolder]*len(flist)))
 
 
-def work(file):
+def work(file):   #此处的file为(flist, [testfolder]*len(flist))元组， 其中flist为符合搜索模式的文件名列表，testfolder为测试文件夹路径
     f = file[0]
     testfolder = file[1]
     fname = f.split('/')[-1].split(".")[0]    
@@ -202,8 +202,8 @@ if __name__ == '__main__':
         testfolder = os.path.join(ct.outputdir, tmp)
         if not os.path.exists(testfolder):
             makedirs(testfolder)
-        fpath = os.path.join(args.t, '*.merge')
-        flist = glob.glob(fpath)
+        fpath = os.path.join(args.t, '*.merge')  # fpath是args.t路径下以.merge结尾的文件的匹配模式
+        flist = glob.glob(fpath)            # flist所有符合fpath模式的文件列表
         parallel(flist,testfolder)
 
         # for f in flist:
