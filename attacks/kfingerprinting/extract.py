@@ -202,11 +202,11 @@ def number_per_sec(trace_data):
             if p[0] <= i:
                 c+=1
         temp.append(c)
-    for prev,item,next in neighborhood(temp):
+    for prev,item,next in neighborhood(temp):    # tem中找到相邻的三个元素，并计算当前元素比上一元素的差
         x = item - prev
         l.append(x)
-    avg_number_per_sec = sum(l)/float(len(l))
-    return avg_number_per_sec, np.std(l), np.percentile(l, 50), min(l), max(l), l
+    avg_number_per_sec = sum(l)/float(len(l))   # 对差值求平均 
+    return avg_number_per_sec, np.std(l), np.percentile(l, 50), min(l), max(l), l      #对Total流量中的时间戳，若其<=第i秒，则计数，并返回对于第i秒，有多少个符合此条件的时间戳数 tem中找到相邻的三个元素，并计算当前元素比上一元素的差 对差值求平均、标准差、第50百分位数、最小、最大还有差值列表本身
 
 #Variant of packet ordering features from http://cacr.uwaterloo.ca/techreports/2014/cacr2014-05.pdf
 def avg_pkt_ordering_stats(trace_data):
@@ -295,7 +295,7 @@ def TOTAL_FEATURES(trace_data, max_size=175):
     number_pkts = list(number_pkt_stats(trace_data))
     thirtypkts = first_and_last_30_pkts_stats(trace_data)
     stdconc, avgconc, medconc, minconc, maxconc, conc = pkt_concentration_stats(trace_data)        # 将Total列表每隔20个元素分为一组，计算每组中出流量数据包的个数并放入concentrations列表。最后计算列表的std、sum、max、min、第50百分位数
-    avg_per_sec, std_per_sec, med_per_sec, min_per_sec, max_per_sec, per_sec = number_per_sec(trace_data)
+    avg_per_sec, std_per_sec, med_per_sec, min_per_sec, max_per_sec, per_sec = number_per_sec(trace_data)  # #对Total流量中的时间戳，若其<=第i秒，则计数，并返回对于第i秒，有多少个符合此条件的时间戳数 tem中找到相邻的三个元素，并计算当前元素比上一元素的差 对差值求平均、标准差、第50百分位数、最小、最大还有差值列表本身
     avg_order_in, avg_order_out, std_order_in, std_order_out = avg_pkt_ordering_stats(trace_data)
     perc_in, perc_out = perc_inc_out(trace_data)
 
