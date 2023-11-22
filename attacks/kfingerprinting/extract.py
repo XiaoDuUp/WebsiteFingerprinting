@@ -51,7 +51,8 @@ def chunkIt(seq, num):
 
 """Non-feeder functions"""
 
-def get_pkt_list(trace_data):
+def get_pkt_list(trace_data):   #一个站点中的一个实例中的流量数据，出/入流量数据中其时间戳到第一个流量时间戳差值
+                                #每个差值与流量方向构成一个元组，作为dta的一个元素。  该函数返回dta列表
     first_line = trace_data[0]
     first_line = first_line.split()
     first_time = float(first_line[0])
