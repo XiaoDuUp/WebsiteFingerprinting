@@ -146,12 +146,12 @@ def time_percentile_stats(trace_data):
         STATS.extend(([0]*4))
     return STATS
 
-def number_pkt_stats(trace_data):
+def number_pkt_stats(trace_data):         #返回一个In\Out\Total列表的长度
     Total = get_pkt_list(trace_data)
     In, Out = In_Out(Total)
     return len(In), len(Out), len(Total)
 
-def first_and_last_30_pkts_stats(trace_data):
+def first_and_last_30_pkts_stats(trace_data):   # Total为流量数据包中，每个出、入数据流量与第一个数据流量的时间戳的差值。first_and_last_30 分别计算前30、后30个差值中输入、输出流量数 共4个值。
     Total = get_pkt_list(trace_data)
     first30 = Total[:30]
     last30 = Total[-30:]
@@ -177,7 +177,7 @@ def first_and_last_30_pkts_stats(trace_data):
     return stats
 
 #concentration of outgoing packets in chunks of 20 packets
-def pkt_concentration_stats(trace_data):
+def pkt_concentration_stats(trace_data):   # 将Total列表每隔20个元素分为一组，计算每组中出流量数据包的个数并放入concentrations列表。最后计算列表的std、sum、max、min、第50百分位数
     Total = get_pkt_list(trace_data)
     chunks= [Total[x:x+20] for x in range(0, len(Total), 20)]
     concentrations = []
@@ -193,10 +193,10 @@ def pkt_concentration_stats(trace_data):
 def number_per_sec(trace_data):
     Total = get_pkt_list(trace_data)
     last_time = Total[-1][0]
-    last_second = math.ceil(last_time)
-    temp = []
+    last_second = math.ceil(last_time)   #获取时间值 last_time 的上一个整数秒数。例如，如果 last_time 是 3.2 秒，math.ceil(3.2) 将返回 4，表示在这种情况下 last_second 将被设置为 4 秒。
+    temp = [] 
     l = []
-    for i in range(1, int(last_second)+1):
+    for i in range(1, int(last_second)+1):      #对Total流量中的时间戳，若其<=第i秒，则计数，并返回对于第i秒，有多少个符合此条件的时间戳数
         c = 0
         for p in Total:
             if p[0] <= i:
@@ -294,7 +294,7 @@ def TOTAL_FEATURES(trace_data, max_size=175):
     timestats = time_percentile_stats(trace_data)           # timestats 为 In、Out、Total数据流量包中第24、50、75、100的百分位位置的时间戳
     number_pkts = list(number_pkt_stats(trace_data))
     thirtypkts = first_and_last_30_pkts_stats(trace_data)
-    stdconc, avgconc, medconc, minconc, maxconc, conc = pkt_concentration_stats(trace_data)
+    stdconc, avgconc, medconc, minconc, maxconc, conc = pkt_concentration_stats(trace_data)        # 将Total列表每隔20个元素分为一组，计算每组中出流量数据包的个数并放入concentrations列表。最后计算列表的std、sum、max、min、第50百分位数
     avg_per_sec, std_per_sec, med_per_sec, min_per_sec, max_per_sec, per_sec = number_per_sec(trace_data)
     avg_order_in, avg_order_out, std_order_in, std_order_out = avg_pkt_ordering_stats(trace_data)
     perc_in, perc_out = perc_inc_out(trace_data)
