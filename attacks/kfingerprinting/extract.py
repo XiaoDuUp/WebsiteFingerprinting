@@ -291,7 +291,7 @@ def TOTAL_FEATURES(trace_data, max_size=175):
 
     # ------TIME--------
     intertimestats = [x for x in interarrival_maxminmeansd_stats(list_data)[0]]   # intertimestats为max_value_In
-    timestats = time_percentile_stats(trace_data)
+    timestats = time_percentile_stats(trace_data)           # timestats 为 In、Out、Total数据流量包中第24、50、75、100的百分位位置的时间戳
     number_pkts = list(number_pkt_stats(trace_data))
     thirtypkts = first_and_last_30_pkts_stats(trace_data)
     stdconc, avgconc, medconc, minconc, maxconc, conc = pkt_concentration_stats(trace_data)
