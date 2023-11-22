@@ -82,25 +82,25 @@ def In_Out(list_data):
 
 ############### TIME FEATURES #####################
 
-def inter_pkt_time(list_data):
+def inter_pkt_time(list_data):           #相邻数据流量的时间戳差值
     times = [x[0] for x in list_data]
     temp = []
     for elem,next_elem in zip(times, times[1:]+[times[0]]):
         temp.append(next_elem-elem)
     return temp[:-1]
 
-def interarrival_times(list_data):
-    In, Out = In_Out(list_data)
+def interarrival_times(list_data):           
+    In, Out = In_Out(list_data)               #将流量数据分成in、out两个列表
     IN = inter_pkt_time(In)
     OUT = inter_pkt_time(Out)
-    TOTAL = inter_pkt_time(list_data)
+    TOTAL = inter_pkt_time(list_data)    # list_data中相邻数据流量的时间戳差值
     return IN, OUT, TOTAL
 
-def interarrival_maxminmeansd_stats(list_data):
+def interarrival_maxminmeansd_stats(list_data):      # 对list_data数据中的流量数据 分为In、out两类并根据其相邻时间戳差值 作 求和，平均、标准差、取第百分之XX位等计算
     interstats = []
-    In, Out, Total = interarrival_times(list_data)
+    In, Out, Total = interarrival_times(list_data)  # In、Out、Total中相邻数据流量的时间戳差值
     if In and Out:
-        avg_in = sum(In)/float(len(In))
+        avg_in = sum(In)/float(len(In))               # sum()函数对In的第一个元素求和，即求时间戳的总和
         avg_out = sum(Out)/float(len(Out))
         avg_total = sum(Total)/float(len(Total))
         interstats.append((max(In), max(Out), max(Total), avg_in, avg_out, avg_total, np.std(In), np.std(Out), np.std(Total), np.percentile(In, 75), np.percentile(Out, 75), np.percentile(Total, 75)))
