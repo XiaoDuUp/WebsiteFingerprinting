@@ -290,7 +290,7 @@ def TOTAL_FEATURES(trace_data, max_size=175):
     ALL_FEATURES = []
 
     # ------TIME--------
-    intertimestats = [x for x in interarrival_maxminmeansd_stats(list_data)[0]]
+    intertimestats = [x for x in interarrival_maxminmeansd_stats(list_data)[0]]   # intertimestats为max_value_In
     timestats = time_percentile_stats(trace_data)
     number_pkts = list(number_pkt_stats(trace_data))
     thirtypkts = first_and_last_30_pkts_stats(trace_data)
