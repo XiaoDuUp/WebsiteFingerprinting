@@ -22,7 +22,7 @@ def init_directories():
 
     # Define output directory
     timestamp = strftime('%m%d_%H%M')
-    output_dir = join(ct.RESULTS_DIR, 'ranpad2_'+timestamp)    指明结果输出到RESULTS_DIR/ranpads+时间戳
+    output_dir = join(ct.RESULTS_DIR, 'ranpad2_'+timestamp)    #指明结果输出到RESULTS_DIR/ranpads+时间戳
     makedirs(output_dir)
 
     return output_dir
@@ -43,9 +43,9 @@ def config_logger(args):
 def parse_arguments():
 
     conf_parser = configparser.RawConfigParser()      # 创建配置解析器对象
-    conf_parser.read(ct.CONFIG_FILE)
+    conf_parser.read(ct.CONFIG_FILE)           # CONFIG_FILE : 本front文件夹中的constants.py 中调用了 config.ini配置文件
 
-
+        # parser 命令行参数解析对象
     parser = argparse.ArgumentParser(description='It simulates adaptive padding on a set of web traffic traces.')
 
     parser.add_argument('p',
@@ -54,12 +54,12 @@ def parse_arguments():
     parser.add_argument('-format',
                         metavar='<suffix of a file>',
                         default = '',
-                        help='suffix of a file.')
+                        help='suffix of a file.')       # suffix (后缀的意思)
     parser.add_argument('-c', '--config',
-                        dest="section",
+                        dest="section",         # 存储解析结果
                         metavar='<config name>',
-                        help="Adaptive padding configuration.",
-                        choices= conf_parser.sections(),
+                        help="Adaptive padding configuration.", 
+                        choices= conf_parser.sections(),   # 使用了 conf_parser.sections() 方法来获取配置文件中所有的小节名称，作为可选的配置名称列表。
                         default="default")
 
     parser.add_argument('--log',
