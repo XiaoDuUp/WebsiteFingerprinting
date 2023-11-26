@@ -22,7 +22,7 @@ def init_directories():
 
     # Define output directory
     timestamp = strftime('%m%d_%H%M')
-    output_dir = join(ct.RESULTS_DIR, 'ranpad2_'+timestamp)
+    output_dir = join(ct.RESULTS_DIR, 'ranpad2_'+timestamp)    指明结果输出到RESULTS_DIR/ranpads+时间戳
     makedirs(output_dir)
 
     return output_dir
@@ -42,7 +42,7 @@ def config_logger(args):
 
 def parse_arguments():
 
-    conf_parser = configparser.RawConfigParser()
+    conf_parser = configparser.RawConfigParser()      # 创建配置解析器对象
     conf_parser.read(ct.CONFIG_FILE)
 
 
