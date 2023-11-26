@@ -74,7 +74,7 @@ def parse_arguments():
     config_logger(args)
     return args,config
 
-def load_trace(fdir):
+def load_trace(fdir):            # 返回DataFrame类型的numpy 数组
     with open(fdir,'r') as f:
         tmp = f.readlines()
     t = pd.Series(tmp).str.slice(0,-1).str.split('\t',expand = True).astype('float')
