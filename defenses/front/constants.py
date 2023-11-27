@@ -1,7 +1,7 @@
 from os.path import join, abspath, dirname, pardir
 
 # Directories
-BASE_DIR = abspath(join(dirname(__file__), pardir))
+BASE_DIR = abspath(join(dirname(__file__), pardir))            #  defenses的绝对路径
 RESULTS_DIR = join(BASE_DIR, "results")
 
 # Files
